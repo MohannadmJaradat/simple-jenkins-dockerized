@@ -16,20 +16,21 @@ pipeline {
         stage('Pull Repo') {
             steps {
                 echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
-                sh '''
-                    if [ ! -d "$GIT_DIR/.git" ]; then
+                sh """
+                    echo 🔍 Checking directory: ${GIT_DIR}
+                    if [ ! -d "${GIT_DIR}/.git" ]; then
                         echo "📦 Cloning repository..."
-                        git clone -b "$DEPLOY_BRANCH" "$REPO_URL" "$(dirname $GIT_DIR)"
+                        git clone -b "${DEPLOY_BRANCH}" "${REPO_URL}" "${GIT_DIR}"
                     else
                         echo "🔄 Pulling latest changes..."
-                        cd "$GIT_DIR"
+                        cd "${GIT_DIR}"
                         pwd
-                        ls -la "$GIT_DIR"
+                        ls -la
                         git fetch origin
-                        git checkout "$DEPLOY_BRANCH"
-                        git reset --hard "origin/$DEPLOY_BRANCH"
+                        git checkout "${DEPLOY_BRANCH}"
+                        git reset --hard "origin/${DEPLOY_BRANCH}"
                     fi
-                '''
+                """
             }
         }
         stage("Lint") {
