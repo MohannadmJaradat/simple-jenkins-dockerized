@@ -11,9 +11,9 @@ echo "🚀 Deploying branch: $BRANCH"
 cd "$APP_DIR"
 
 echo "🔄 Pulling latest changes..."
-git fetch origin
-git checkout "$BRANCH"
-git reset --hard "origin/$BRANCH"
+# git fetch origin
+# git checkout "$BRANCH"
+# git reset --hard "origin/$BRANCH"
 
 echo "🐳 Building & Starting Docker container..."
 docker-compose down
