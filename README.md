@@ -20,7 +20,7 @@ simple_jenkins/
 ```
 
 ---
-### ################################# add prerequisites secion, they are installing jenkins and installing docker.
+### ################################# add prerequisites secion, they are installing jenkins and installing docker. make sure to install docker-compose for the build stage
 
 
 ## 🚀 Manual Setup & Running the App
