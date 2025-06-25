@@ -23,6 +23,8 @@ simple_jenkins/
 
 ## 🚀 Manual Setup & Running the App
 
+### Note that you must switch to "jenkins" user, which is the user used when a jenkins run is triggered.
+
 ### 1. Fork and clone the repository
 
 > **🔐 First time setup?** Generate and configure your SSH key:
@@ -134,6 +136,11 @@ Environment=PYTHONUNBUFFERED=1
 
 [Install]
 WantedBy=multi-user.target
+```
+
+### Make sure to give ownership to jenkins user:
+```bash
+sudo chown jenkins:jenkins /etc/systemd/system/streamlit-app.service
 ```
 
 ### 🚀 Enable and Start the Service
