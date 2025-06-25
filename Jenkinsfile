@@ -16,7 +16,7 @@ pipeline {
             steps {
                 echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
                 sh '''
-                    APP_BASE="/home/ubuntu"
+                    APP_BASE="/var/lib/jenkins"
                     REPO_URL="git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git"
                     BRANCH="${DEPLOY_BRANCH}"
 
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
-                    flake8 /home/ubuntu/simple-jenkins-dockerized/streamlit_app/app.py > lint_report.txt || true
+                    flake8 /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/app.py > lint_report.txt || true
                 '''
                 archiveArtifacts artifacts: 'lint_report.txt'
             }
@@ -49,8 +49,8 @@ pipeline {
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install --upgrade pip
-                    pip install -r /home/ubuntu/simple-jenkins-dockerized/streamlit_app/requirements.txt
-                    tar -czf app.tar.gz /home/ubuntu/simple-jenkins-dockerized/
+                    pip install -r /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/requirements.txt
+                    tar -czf app.tar.gz /var/lib/jenkins/simple-jenkins-dockerized/
                 '''
                 archiveArtifacts 'app.tar.gz'
                 echo "The author's name is: ${AUTHOR_NAME}"
@@ -68,9 +68,9 @@ pipeline {
         stage("Deploy") {
             steps {
                 sh '''
-                    chmod +x /home/ubuntu/simple-jenkins-dockerized/streamlit_app/deploy.sh
+                    chmod +x /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/deploy.sh
                     echo "Deploying branch: ${DEPLOY_BRANCH} locally..."
-                    bash /home/ubuntu/simple-jenkins-dockerized/streamlit_app/deploy.sh ${DEPLOY_BRANCH}
+                    bash /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/deploy.sh ${DEPLOY_BRANCH}
                 '''
             }
         }

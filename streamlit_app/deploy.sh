@@ -3,7 +3,7 @@
 set -e  # Exit on error
 set -o pipefail
 
-APP_BASE="/home/ubuntu"
+APP_BASE="/var/lib/jenkins"
 REPO_URL="git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git"
 BRANCH="${1:-main}"  # Use first arg or default to 'main'
 
