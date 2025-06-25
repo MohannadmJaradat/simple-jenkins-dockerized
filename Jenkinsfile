@@ -22,7 +22,7 @@ pipeline {
                         git clone -b "$DEPLOY_BRANCH" "$REPO_URL" "$(dirname $GIT_DIR)"
                     else
                         echo "🔄 Pulling latest changes..."
-                        cd "$GIT_DIR"
+                        cd "$GIT_DIR/"
                         git fetch origin
                         git checkout "$DEPLOY_BRANCH"
                         git reset --hard "origin/$DEPLOY_BRANCH"
