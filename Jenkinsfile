@@ -23,7 +23,7 @@ pipeline {
                     else
                         echo "🔄 Pulling latest changes..."
                         cd "$GIT_DIR"
-                        ls -la "$GIT_DIR
+                        ls -la "$GIT_DIR"
                         git fetch origin
                         git checkout "$DEPLOY_BRANCH"
                         git reset --hard "origin/$DEPLOY_BRANCH"
