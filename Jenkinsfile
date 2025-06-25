@@ -36,7 +36,7 @@ pipeline {
         stage("Lint") {
             steps {
                 sh '''
-                    . venv/bin/activate
+                    . /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/venv/bin/activate
                     flake8 /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/app.py > lint_report.txt || true
                 '''
                 archiveArtifacts artifacts: 'lint_report.txt'
