@@ -20,12 +20,12 @@ pipeline {
                     REPO_URL="git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git"
                     BRANCH="${DEPLOY_BRANCH}"
 
-                    if [ ! -d "$APP_BASE/simple_jenkins/.git" ]; then
+                    if [ ! -d "$APP_BASE/simple-jenkins-dockerized/.git" ]; then
                         echo "📦 Cloning repository..."
-                        git clone -b "$BRANCH" "$REPO_URL" "$APP_BASE/simple_jenkins"
+                        git clone -b "$BRANCH" "$REPO_URL" "$APP_BASE/simple-jenkins-dockerized"
                     else
                         echo "🔄 Pulling latest changes..."
-                        cd "$APP_BASE/simple_jenkins"
+                        cd "$APP_BASE/simple-jenkins-dockerized"
                         git fetch origin
                         git checkout "$BRANCH"
                         git reset --hard "origin/$BRANCH"
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
-                    flake8 /srv/streamlit_app/simple_jenkins/streamlit_app/app.py > lint_report.txt || true
+                    flake8 /home/ubuntu/simple-jenkins-dockerized/streamlit_app/app.py > lint_report.txt || true
                 '''
                 archiveArtifacts artifacts: 'lint_report.txt'
             }
