@@ -16,7 +16,7 @@ pipeline {
         stage('Pull Repo') {
             steps {
                 echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
-                sh """
+                sh '''
                     if [ ! -d "$GIT_DIR/.git" ]; then
                         echo "📦 Cloning repository..."
                         git clone -b "$DEPLOY_BRANCH" "$REPO_URL" "$(dirname $GIT_DIR)"
@@ -27,7 +27,7 @@ pipeline {
                         git checkout "$DEPLOY_BRANCH"
                         git reset --hard "origin/$DEPLOY_BRANCH"
                     fi
-                """
+                '''
             }
         }
         stage("Lint") {
