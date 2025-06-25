@@ -48,7 +48,7 @@ pipeline {
             steps {
                 echo "🐳 Building Docker image..."
                 sh '''
-                    cd "$APP_DIR"
+                    cd /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app
                     docker-compose build
                     tar -czf app.tar.gz .
                 '''
