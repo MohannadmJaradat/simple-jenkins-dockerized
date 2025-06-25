@@ -50,7 +50,7 @@ pipeline {
                 sh '''
                     cd "$APP_DIR"
                     docker-compose build
-                    tar -czf app.tar.gz * --exclude=venv --exclude=app.tar.gz
+                    tar --exclude=venv --exclude=app.tar.gz -czf app.tar.gz *
                 '''
                 archiveArtifacts 'app.tar.gz'
                 echo "The author's name is: ${AUTHOR_NAME}"
