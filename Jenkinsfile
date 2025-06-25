@@ -16,8 +16,8 @@ pipeline {
             steps {
                 echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
                 sh '''
-                    APP_BASE="/srv/streamlit_app"
-                    REPO_URL="git@github.com:MohannadmJaradat/simple_jenkins.git"
+                    APP_BASE="/home/ubuntu"
+                    REPO_URL="git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git"
                     BRANCH="${DEPLOY_BRANCH}"
 
                     if [ ! -d "$APP_BASE/simple_jenkins/.git" ]; then
@@ -49,8 +49,8 @@ pipeline {
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install --upgrade pip
-                    pip install -r /srv/streamlit_app/simple_jenkins/streamlit_app/requirements.txt
-                    tar -czf app.tar.gz /srv/streamlit_app/simple_jenkins/
+                    pip install -r /home/ubuntu/simple-jenkins-dockerized/streamlit_app/requirements.txt
+                    tar -czf app.tar.gz /home/ubuntu/simple-jenkins-dockerized/
                 '''
                 archiveArtifacts 'app.tar.gz'
                 echo "The author's name is: ${AUTHOR_NAME}"
@@ -68,9 +68,9 @@ pipeline {
         stage("Deploy") {
             steps {
                 sh '''
-                    chmod +x /srv/streamlit_app/simple_jenkins/streamlit_app/deploy.sh
+                    chmod +x /home/ubuntu/simple-jenkins-dockerized/streamlit_app/deploy.sh
                     echo "Deploying branch: ${DEPLOY_BRANCH} locally..."
-                    bash /srv/streamlit_app/simple_jenkins/streamlit_app/deploy.sh ${DEPLOY_BRANCH}
+                    bash /home/ubuntu/simple-jenkins-dockerized/streamlit_app/deploy.sh ${DEPLOY_BRANCH}
                 '''
             }
         }

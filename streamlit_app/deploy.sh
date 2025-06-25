@@ -3,21 +3,21 @@
 set -e  # Exit on error
 set -o pipefail
 
-APP_BASE="/srv/streamlit_app"
-REPO_URL="git@github.com:mohannad-jaradat/simple_jenkins.git"
+APP_BASE="/home/ubuntu"
+REPO_URL="git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git"
 BRANCH="${1:-main}"  # Use first arg or default to 'main'
 
-APP_DIR="$APP_BASE/simple_jenkins/streamlit_app"
+APP_DIR="$APP_BASE/simple-jenkins-dockerized/streamlit_app"
 
 echo "🚀 Deploying branch: $BRANCH"
 
 # Clone repo if not present
-if [ ! -d "$APP_BASE/simple_jenkins/.git" ]; then
+if [ ! -d "$APP_BASE/simple-jenkins-dockerized/.git" ]; then
     echo "📦 Cloning repository..."
-    git clone -b "$BRANCH" "$REPO_URL" "$APP_BASE/simple_jenkins"
+    git clone -b "$BRANCH" "$REPO_URL" "$APP_BASE/simple-jenkins-dockerized"
 else
     echo "🔄 Pulling latest changes..."
-    cd "$APP_BASE/simple_jenkins"
+    cd "$APP_BASE/simple-jenkins-dockerized"
     git fetch origin
     git checkout "$BRANCH"
     git reset --hard "origin/$BRANCH"
