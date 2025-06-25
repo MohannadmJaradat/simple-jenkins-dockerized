@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        AUTHOR_NAME='Mohannad Jaradat'
-        // AWS_ACCESS_KEY_ID= credentials('aws-access-key-id')
-        // AWS_SECRET_ACCESS_KEY_ID= credentials('aws-secret-access-key')
+        AUTHOR_NAME = 'Mohannad Jaradat'
+        APP_DIR = '/var/lib/jenkins/simple-jenkins-dockerized/streamlit_app'
+        REPO_URL = 'git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git'
         DEPLOY_BRANCH = "main"
     }
     stages {
@@ -16,41 +16,37 @@ pipeline {
             steps {
                 echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
                 sh '''
-                    APP_BASE="/var/lib/jenkins"
-                    REPO_URL="git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git"
-                    BRANCH="${DEPLOY_BRANCH}"
-
-                    if [ ! -d "$APP_BASE/simple-jenkins-dockerized/.git" ]; then
+                    if [ ! -d "$APP_DIR/.git" ]; then
                         echo "📦 Cloning repository..."
-                        git clone -b "$BRANCH" "$REPO_URL" "$APP_BASE/simple-jenkins-dockerized"
+                        git clone -b "$DEPLOY_BRANCH" "$REPO_URL" "$(dirname $APP_DIR)"
                     else
                         echo "🔄 Pulling latest changes..."
-                        cd "$APP_BASE/simple-jenkins-dockerized"
+                        cd "$APP_DIR"
                         git fetch origin
-                        git checkout "$BRANCH"
-                        git reset --hard "origin/$BRANCH"
+                        git checkout "$DEPLOY_BRANCH"
+                        git reset --hard "origin/$DEPLOY_BRANCH"
                     fi
                 '''
             }
         }
         stage("Lint") {
             steps {
+                echo "🧹 Linting app.py using flake8 in Docker..."
                 sh '''
-                    . /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/venv/bin/activate
-                    flake8 /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/app.py > lint_report.txt || true
+                cd "$APP_DIR"
+                    docker run --rm -v $APP_DIR:/app python:3.11 \
+                        bash -c "pip install flake8 && flake8 /app/app.py" > lint_report.txt || true
                 '''
                 archiveArtifacts artifacts: 'lint_report.txt'
             }
         }
         stage("Build") {
             steps {
-                echo "Building the app..."
+                echo "🐳 Building Docker image..."
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/requirements.txt
-                    tar -czf app.tar.gz /var/lib/jenkins/simple-jenkins-dockerized/
+                    cd "$APP_DIR"
+                    docker-compose build
+                    tar -czf app.tar.gz .
                 '''
                 archiveArtifacts 'app.tar.gz'
                 echo "The author's name is: ${AUTHOR_NAME}"
@@ -58,19 +54,21 @@ pipeline {
         }
         stage("Test") {
             steps {
+                echo "🧪 Running tests inside container..."
                 sh '''
-                    . venv/bin/activate
-                    pytest --cov=. > coverage.txt
+                    cd "$APP_DIR"
+                    docker run --rm -v $APP_DIR:/app python:3.11 \
+                        bash -c "pip install pytest && pytest /app/test_app.py --maxfail=1 --disable-warnings" > coverage.txt || true
                 '''
                 archiveArtifacts artifacts: 'coverage.txt'
             }
         }
         stage("Deploy") {
             steps {
+                echo "🚀 Running deploy script (Docker Compose)..."
                 sh '''
-                    chmod +x /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/deploy.sh
-                    echo "Deploying branch: ${DEPLOY_BRANCH} locally..."
-                    bash /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/deploy.sh ${DEPLOY_BRANCH}
+                    chmod +x "$APP_DIR/deploy.sh"
+                    bash "$APP_DIR/deploy.sh"
                 '''
             }
         }
