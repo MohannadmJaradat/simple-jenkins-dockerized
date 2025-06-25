@@ -10,7 +10,7 @@ echo "🚀 Deploying branch: $BRANCH"
 
 cd "$APP_DIR"
 
-echo "🔄 Pulling latest changes..."
+# echo "🔄 Pulling latest changes..."
 # git fetch origin
 # git checkout "$BRANCH"
 # git reset --hard "origin/$BRANCH"
