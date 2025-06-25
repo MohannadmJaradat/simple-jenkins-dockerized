@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         AUTHOR_NAME = 'Mohannad Jaradat'
+        GIT_DIR = '/var/lib/jenkins/simple-jenkins-dockerized'
         APP_DIR = '/var/lib/jenkins/simple-jenkins-dockerized/streamlit_app'
         REPO_URL = 'git@github.com:MohannadmJaradat/simple-jenkins-dockerized.git'
         DEPLOY_BRANCH = "main"
@@ -16,12 +17,12 @@ pipeline {
             steps {
                 echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
                 sh '''
-                    if [ ! -d "$APP_DIR/.git" ]; then
+                    if [ ! -d "$GIT_DIR/.git" ]; then
                         echo "📦 Cloning repository..."
-                        git clone -b "$DEPLOY_BRANCH" "$REPO_URL" "$(dirname $APP_DIR)"
+                        git clone -b "$DEPLOY_BRANCH" "$REPO_URL" "$(dirname $GIT_DIR)"
                     else
                         echo "🔄 Pulling latest changes..."
-                        cd "$APP_DIR"
+                        cd "$GIT_DIR"
                         git fetch origin
                         git checkout "$DEPLOY_BRANCH"
                         git reset --hard "origin/$DEPLOY_BRANCH"
