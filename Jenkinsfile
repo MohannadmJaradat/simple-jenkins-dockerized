@@ -8,11 +8,11 @@ pipeline {
         DEPLOY_BRANCH = "main"
     }
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         checkout scm
-        //     }
-        // }
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Pull Repo') {
             steps {
                 echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
@@ -23,6 +23,7 @@ pipeline {
                     else
                         echo "🔄 Pulling latest changes..."
                         cd "$GIT_DIR"
+                        ls -la "$GIT_DIR
                         git fetch origin
                         git checkout "$DEPLOY_BRANCH"
                         git reset --hard "origin/$DEPLOY_BRANCH"
