@@ -59,11 +59,13 @@ pipeline {
         }
         stage("Deploy") {
             steps {
-                echo "🚀 Running deploy script (Docker Compose)..."
-                sh '''
-                    chmod +x "$APP_DIR/deploy.sh"
-                    bash "$APP_DIR/deploy.sh"
-                '''
+                timeout(time: 5, unit: 'MINUTES') {  // Add timeout
+                    echo "🚀 Running deploy script (Docker Compose)..."
+                    sh """
+                        chmod +x ${APP_DIR}/deploy.sh
+                        bash ${APP_DIR}/deploy.sh
+                    """
+                }
             }
         }
     }
