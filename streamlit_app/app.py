@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
-st.title("Hello from Jenkins CI/CD broooooo")
+st.title("Hello from Jenkins CI/CD nigger")
 # ---------- Sidebar ----------
 st.sidebar.title("🔧 Dashboard Controls")
 start_date = st.sidebar.date_input("Start Date", datetime.now() - timedelta(days=30))
