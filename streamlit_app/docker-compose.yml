@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   streamlit:
-    build: ./streamlit_app  # Build context points to streamlit_app directory
+    build: .
     container_name: streamlit_app
     ports:
       - "8501:8501"
