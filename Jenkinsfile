@@ -29,7 +29,8 @@ pipeline {
                 sh '''
                 cd "$APP_DIR"
                     docker run --rm -v $APP_DIR:/app python:3.11 \
-                        bash -c "pip install flake8 && flake8 /app/app.py" > lint_report.txt || true
+                        bash -c "pip install flake8 && flake8 /app/app.py" \
+                        | tee "$APP_DIR/lint_report.txt" || true
                 '''
                 archiveArtifacts artifacts: 'streamlit_app/lint_report.txt'
             }
