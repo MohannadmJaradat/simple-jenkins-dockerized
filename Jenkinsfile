@@ -8,7 +8,7 @@ pipeline {
         DEPLOY_BRANCH = "main"
     }
     stages {
-        stage('Checkout to Custom Location') {
+        stage('Pull Repo') {
             steps {
                 echo "📥 Checking out repository..."
                 script {
@@ -22,6 +22,7 @@ pipeline {
                     }
                 }
             }
+        }
         stage("Lint") {
             steps {
                 echo "🧹 Linting app.py using flake8 in Docker..."
