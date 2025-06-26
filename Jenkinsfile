@@ -13,23 +13,26 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Pull Repo') {
-            steps {
-                echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
-                sh '''
-                    if [ ! -d "$GIT_DIR/.git" ]; then
-                        echo "📦 Cloning repository..."
-                        git clone -b "$DEPLOY_BRANCH" "$REPO_URL" "$(dirname $GIT_DIR)"
-                    else
-                        echo "🔄 Pulling latest changes..."
-                        cd "$GIT_DIR/"
-                        git fetch origin
-                        git checkout "$DEPLOY_BRANCH"
-                        git reset --hard "origin/$DEPLOY_BRANCH"
-                    fi
-                '''
-            }
-        }
+        // stage('Pull Repo') {
+        //     steps {
+        //         echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
+        //         sh """
+        //             echo 🔍 Checking directory: ${GIT_DIR}
+        //             if [ ! -d "${GIT_DIR}/.git" ]; then
+        //                 echo "📦 Cloning repository..."
+        //                 git clone -b "${DEPLOY_BRANCH}" "${REPO_URL}" "${GIT_DIR}"
+        //             else
+        //                 echo "🔄 Pulling latest changes..."
+        //                 cd "${GIT_DIR}"
+        //                 pwd
+        //                 ls -la
+        //                 git fetch origin
+        //                 git checkout "${DEPLOY_BRANCH}"
+        //                 git reset --hard "origin/${DEPLOY_BRANCH}"
+        //             fi
+        //         """
+        //     }
+        // }
         stage("Lint") {
             steps {
                 echo "🧹 Linting app.py using flake8 in Docker..."
@@ -47,7 +50,7 @@ pipeline {
                 sh '''
                     cd "$APP_DIR"
                     docker-compose build
-                    tar -czf app.tar.gz .
+                    tar --exclude=venv --exclude=app.tar.gz -czf app.tar.gz *
                 '''
                 archiveArtifacts 'app.tar.gz'
                 echo "The author's name is: ${AUTHOR_NAME}"
