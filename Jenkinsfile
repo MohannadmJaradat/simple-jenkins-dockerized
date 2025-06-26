@@ -44,6 +44,7 @@ pipeline {
                     docker-compose build
                     tar --exclude=venv --exclude=app.tar.gz -czf app.tar.gz *
                 '''
+                sh 'cp /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/app.tar.gz app.tar.gz'
                 archiveArtifacts 'app.tar.gz'
                 echo "The author's name is: ${AUTHOR_NAME}"
             }
