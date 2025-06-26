@@ -8,33 +8,20 @@ pipeline {
         DEPLOY_BRANCH = "main"
     }
     stages {
-        stage('Checkout') {
+        stage('Checkout to Custom Location') {
             steps {
-                checkout scm
+                echo "📥 Checking out repository..."
+                script {
+                    // Clean the directory first
+                    sh 'rm -rf /var/lib/jenkins/simple-jenkins-dockerized'
+                    
+                    // Clone to specific location
+                    dir('/var/lib/jenkins/simple-jenkins-dockerized') {
+                        git branch: 'main', 
+                            url: 'https://github.com/MohannadmJaradat/simple-jenkins-dockerized.git'
+                    }
+                }
             }
-        }
-        stage('Pull Repo') {
-            steps {
-                echo "📥 Pulling latest changes from branch: ${DEPLOY_BRANCH}"
-                sh """
-                    echo 🔍 Checking directory: ${GIT_DIR}
-                    if [ ! -d "${GIT_DIR}/.git" ]; then
-                        echo "📦 Cloning repository..."
-                        git clone -b "${DEPLOY_BRANCH}" "${REPO_URL}" "${GIT_DIR}"
-                    else
-                        echo "🔄 Pulling latest changes..."
-                        cd "${GIT_DIR}"
-                        pwd
-                        ls -la
-                        git config user.email "jenkins@yourdomain.com" || true
-                        git config user.name "Jenkins" || true
-                        git fetch origin
-                        git checkout "${DEPLOY_BRANCH}"
-                        git reset --hard "origin/${DEPLOY_BRANCH}"
-                    fi
-                """
-            }
-        }
         stage("Lint") {
             steps {
                 echo "🧹 Linting app.py using flake8 in Docker..."
