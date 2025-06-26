@@ -32,7 +32,7 @@ pipeline {
                         bash -c "pip install flake8 && flake8 /app/app.py" \
                         | tee "$APP_DIR/lint_report.txt" || true
                 '''
-                // sh 'cp /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/lint_report.txt lint_report.txt'
+                sh 'cp /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/lint_report.txt lint_report.txt'
                 archiveArtifacts artifacts: '**/lint_report.txt'
             }
         }
