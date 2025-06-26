@@ -15,6 +15,17 @@ cd "$APP_DIR"
 # git checkout "$BRANCH"
 # git reset --hard "origin/$BRANCH"
 
+# Check if port 8501 is in use and kill the process using it
+echo "🛑 Checking if port 8501 is in use..."
+
+PORT_IN_USE=$(lsof -ti:8501)
+if [ -n "$PORT_IN_USE" ]; then
+  echo "⚠️ Port 8501 is in use by PID(s): $PORT_IN_USE. Terminating them..."
+  kill -9 $PORT_IN_USE || true
+else
+  echo "✅ Port 8501 is free."
+fi
+
 echo "🐳 Building & Starting Docker container..."
 docker-compose down
 docker-compose up -d --build
