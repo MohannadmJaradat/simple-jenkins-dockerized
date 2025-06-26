@@ -26,7 +26,7 @@ git reset --hard "origin/$BRANCH"
 
 echo "🛑 Stopping existing services..."
 # Kill any running streamlit processes
-pkill -f streamlit || true
+sudo pkill -f streamlit || true
 
 # Kill processes using port 8501 (more reliable than fuser)
 lsof -ti:8501 | xargs kill -9 2>/dev/null || true
