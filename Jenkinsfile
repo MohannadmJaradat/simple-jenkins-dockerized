@@ -26,6 +26,8 @@ pipeline {
                         cd "${GIT_DIR}"
                         pwd
                         ls -la
+                        git config user.email "jenkins@yourdomain.com" || true
+                        git config user.name "Jenkins" || true
                         git fetch origin
                         git checkout "${DEPLOY_BRANCH}"
                         git reset --hard "origin/${DEPLOY_BRANCH}"
