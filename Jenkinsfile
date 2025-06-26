@@ -57,6 +57,7 @@ pipeline {
                     docker run --rm -v $APP_DIR:/app python:3.11 \
                         bash -c "pip install pytest && pytest /app/test_app.py --maxfail=1 --disable-warnings" > coverage.txt || true
                 '''
+                sh 'cp /var/lib/jenkins/simple-jenkins-dockerized/streamlit_app/coverage.txt coverage.txt'
                 archiveArtifacts artifacts: 'coverage.txt'
             }
         }
