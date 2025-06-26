@@ -13,13 +13,7 @@ pipeline {
                 echo "📥 Checking out repository..."
                 script {
                     // Clean the directory first
-                    sh '''
-                        if [ -d "/var/lib/jenkins/simple-jenkins-dockerized" ]; then
-                            echo "🧹 Cleaning up Docker-created files..."
-                            docker run --rm -v /var/lib/jenkins/simple-jenkins-dockerized:/workspace alpine:latest rm -rf /workspace/* || true
-                            rm -rf /var/lib/jenkins/simple-jenkins-dockerized || true
-                        fi
-                    '''
+                    sh 'sudo rm -rf /var/lib/jenkins/simple-jenkins-dockerized || true'
                     
                     // Clone to specific location
                     dir('/var/lib/jenkins/simple-jenkins-dockerized') {
