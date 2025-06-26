@@ -31,7 +31,7 @@ pipeline {
                     docker run --rm -v $APP_DIR:/app python:3.11 \
                         bash -c "pip install flake8 && flake8 /app/app.py" > lint_report.txt || true
                 '''
-                archiveArtifacts artifacts: 'lint_report.txt'
+                archiveArtifacts artifacts: 'streamlit_app/lint_report.txt'
             }
         }
         stage("Build") {
