@@ -113,17 +113,45 @@ pipeline {
     
     post {
         always {
-            echo "🧹 Pipeline completed"
+            echo "This will always run regardless of the completion status"
+            mail to: 'jaradatm2@hotmail.com',
+            subject: "📦 Pipeline Completed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The pipeline has completed (success, failure, or otherwise).\n\nSee: ${env.BUILD_URL}"
         }
         success {
-            echo "✅ Pipeline succeeded"
+            echo "This will run if the build succeeded"
+            mail to: 'jaradatm2@hotmail.com',
+            subject: "✅ Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The build was successful.\n\nSee: ${env.BUILD_URL}"
         }
         failure {
-            echo "❌ Pipeline failed"
-            // Show recent logs for debugging
-            script {
-                sh 'sudo docker-compose -f ${APP_DIR}/docker-compose.yml logs --tail=30 || true'
-            }
+            echo "This will run if the job failed"
+            mail to: 'jaradatm2@hotmail.com',
+            subject: "❌ Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The build has failed.\n\nCheck the console: ${env.BUILD_URL}"
         }
+        unstable {
+            echo "This will run if the completion status was 'unstable', usually by test failures"
+            mail to: 'jaradatm2@hotmail.com',
+            subject: "⚠️ Build Unstable: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The build is unstable, usually due to test failures.\n\nSee: ${env.BUILD_URL}"
+        }
+        changed {
+            echo "This will run if the state of the pipeline has changed"
+            echo "For example, if the previous run failed but is now successful"
+            mail to: 'jaradatm2@hotmail.com',
+            subject: "🔁 Pipeline State Changed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The build status has changed from the last run (e.g., failed to passed).\n\nSee: ${env.BUILD_URL}"
+        }
+        fixed {
+            echo "This will run if the previous run failed or unstable and now is successful"
+            mail to: 'jaradatm2@hotmail.com',
+            subject: "🔧 Build Fixed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "The build is now successful after previously failing or being unstable.\n\nSee: ${env.BUILD_URL}"
+        }
+        // cleanup {
+        //     echo "🧹 Cleaning the workspace...."
+        //     cleanWs()
+        // }
     }
 }
