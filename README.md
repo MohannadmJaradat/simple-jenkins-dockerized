@@ -18,6 +18,7 @@ simple-jenkins-dockerized/
 │   ├── .dockerignore
 │   └── streamlit.log
 ├── Jenkinsfile
+├── gitingore
 └── README.md
 ```
 
